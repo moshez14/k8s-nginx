@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+  name: nginx-efs-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 5Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: nginx-efs-pvc
+    namespace: maifocus-dev
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-044e5d43e6c57420a::fsap-0c323661c620d0bdd
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: efs-sc
+  volumeMode: Filesystem

@@ -53,20 +53,28 @@ COPY id_rsa /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/id_rsa \
     && ssh-keyscan github.com >> /root/.ssh/known_hosts
 
+WORKDIR /app
+
+COPY . .
+
+RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/run_ffmpeg.sh
+
 # Clone private repo via SSH
-RUN git clone --depth 1 git@github.com:moshez14/livestream.git 
-WORKDIR livestream
-COPY requirements.txt requirements.txt 
-RUN python3 -m venv /tmp/venv
+#RUN git clone --depth 1 git@github.com:moshez14/livestream.git 
+
+#WORKDIR livestream
+#COPY requirements.txt requirements.txt 
+#RUN python3 -m venv /tmp/venv
 # Activate venv and install requirements
 #RUN source /tmp/venv/bin/activate
 #RUN ./venv/bin/pip install --upgrade pip
-RUN /tmp/venv/bin/pip3 install -r requirements.txt
+#RUN /tmp/venv/bin/pip3 install -r requirements.txt
 #RUN pip3 install -r requirements.txt
 
 USER 1000
 
 # Start custom-built Nginx in foreground
 #CMD ["/usr/local/nginx/sbin/nginx", "-g", "daemon off;"]
-CMD ["/usr/local/nginx/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
-
+#CMD ["/usr/local/nginx/sbin/nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
+ENTRYPOINT ["/app/entrypoint.sh"]
